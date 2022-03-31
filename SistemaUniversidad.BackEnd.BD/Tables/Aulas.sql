@@ -15,7 +15,7 @@ EXEC sp_addextendedproperty
   	@level1type = N'Table',		@level1name = 'Aulas'
 GO
 EXEC sp_addextendedproperty  
-	@name = N'MS_Description',	@value = 'Numero del aula.', 
+	@name = N'MS_Description',	@value = 'Número del aula.', 
    	@level0type = N'Schema',	@level0name = 'dbo', 
    	@level1type = N'Table',		@level1name = 'Aulas',  
    	@level2type = N'Column',	@level2name = 'NumeroDeAula'
