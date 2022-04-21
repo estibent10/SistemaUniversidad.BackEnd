@@ -44,9 +44,28 @@ namespace SistemaUniversidad.BackEnd.API.Repository.SqlServer
             throw new NotImplementedException();
         }
 
-        public void Insertar(Aula t)
+        public void Insertar(Aula aula)
         {
-            throw new NotImplementedException();
+            var query = "SP_Aulas_Insertar";
+            var command = CreateCommand(query);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+
+            command.Parameters.AddWithValue("@NumeroDeAula", aula.NumeroDeAula);
+            command.Parameters.AddWithValue("@NombreDeAula", aula.NombreDeAula);
+            command.Parameters.AddWithValue("@CreadoPor", aula.CreadoPor);
+
+            command.Parameters.Add("@DetalleError", SqlDbType.VarChar, 60).Direction = ParameterDirection.Output;
+            command.Parameters.Add("@ExisteError", SqlDbType.Bit).Direction = ParameterDirection.Output;
+
+            command.ExecuteNonQuery();
+
+            bool ExisteError = Convert.ToBoolean(command.Parameters["@ExisteError"].Value);
+            string? DetalleError = Convert.ToString(command.Parameters["@DetalleError"].Value);
+
+            if (ExisteError)
+            {
+                throw new Exception(DetalleError);
+            }
         }
 
         public Aula SeleccionarPorId(int id)

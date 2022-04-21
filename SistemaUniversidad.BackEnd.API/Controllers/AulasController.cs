@@ -32,8 +32,33 @@ namespace SistemaUniversidad.BackEnd.API.Controllers
 
         // POST api/<AulasController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] AulaDto AulaDTO)
         {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    Aula AulaPorInsertar = new();
+
+                    AulaPorInsertar.NumeroDeAula = AulaDTO.NumeroDeAula;
+                    AulaPorInsertar.NombreDeAula = AulaDTO.NombreDeAula;
+                    AulaPorInsertar.CreadoPor = "diazgs";
+
+                    ServicioDeAulas.Insertar(AulaPorInsertar);
+
+                    return Ok();
+                }
+                else
+                {
+                    string ErroreEnElModelo = ObtenerErroresDeModeloInvalido();
+
+                    return BadRequest(ErroreEnElModelo);
+                }
+            }
+            catch (Exception Ex)
+            {
+                return BadRequest(Ex.Message);
+            }
         }
 
         // PUT api/<AulasController>/5
