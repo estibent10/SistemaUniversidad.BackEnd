@@ -43,12 +43,30 @@ namespace SistemaUniversidad.BackEnd.API.Services
 
         public Aula SeleccionarPorId(int id)
         {
-            throw new NotImplementedException();
+            Aula AulaSeleccionada = new();
+
+            using (var bd = BD.Conectar())
+            {
+                AulaSeleccionada = bd.Repositories.AulasRepository.SeleccionarPorId(id);
+
+                bd.SaveChanges();
+            }
+
+            return AulaSeleccionada;
         }
 
         public List<Aula> SeleccionarTodos()
         {
-            throw new NotImplementedException();
+            List<Aula> ListaTodasLasAulas;
+
+            using (var bd = BD.Conectar())
+            {
+                ListaTodasLasAulas = bd.Repositories.AulasRepository.SeleccionarTodos();
+
+                bd.SaveChanges();
+            }
+
+            return ListaTodasLasAulas;
         }
     }
 }

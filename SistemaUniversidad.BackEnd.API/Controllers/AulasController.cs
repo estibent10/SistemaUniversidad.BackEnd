@@ -18,16 +18,46 @@ namespace SistemaUniversidad.BackEnd.API.Controllers
         }
         // GET: api/<AulasController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public List<AulaDto> Get()
         {
-            return new string[] { "value1", "value2" };
+            List<Aula> ListaTodasLasAulas = ServicioDeAulas.SeleccionarTodos();
+
+            List<AulaDto> ListaTodasLasAulasDto = new();
+
+            foreach (var Aulaseleccionada in ListaTodasLasAulas)
+            {
+                AulaDto AulaDTO = new();
+
+                AulaDTO.NumeroDeAula = Aulaseleccionada.NumeroDeAula;
+                AulaDTO.NombreDeAula = Aulaseleccionada.NombreDeAula;
+                AulaDTO.Activo = Aulaseleccionada.Activo;
+
+                ListaTodasLasAulasDto.Add(AulaDTO);
+            }
+
+            return ListaTodasLasAulasDto;
         }
 
         // GET api/<AulasController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            Aula Aulaseleccionada = new();
+
+            Aulaseleccionada = ServicioDeAulas.SeleccionarPorId(id);
+
+            if (Aulaseleccionada.NumeroDeAula == 0)
+            {
+                return NotFound("Aula no encontrada");
+            }
+
+            AulaDto AulaDTO = new();
+
+            AulaDTO.NumeroDeAula = Aulaseleccionada.NumeroDeAula;
+            AulaDTO.NombreDeAula = Aulaseleccionada.NombreDeAula;
+            AulaDTO.Activo = Aulaseleccionada.Activo;
+
+            return Ok(AulaDTO);
         }
 
         // POST api/<AulasController>

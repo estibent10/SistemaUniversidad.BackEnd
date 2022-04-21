@@ -68,14 +68,63 @@ namespace SistemaUniversidad.BackEnd.API.Repository.SqlServer
             }
         }
 
-        public Aula SeleccionarPorId(int id)
+        public Aula SeleccionarPorId(int NumeroDeAula)
         {
-            throw new NotImplementedException();
+            var query = "SELECT * FROM FN_Aulas_SeleccionarPorId(@NumeroDeAula)";
+            
+            var command = CreateCommand(query);
+
+            command.Parameters.AddWithValue("@NumeroDeAula", NumeroDeAula);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            Aula AulaSeleccionada = new();
+
+            while (reader.Read())
+            {
+                AulaSeleccionada.NumeroDeAula = Convert.ToInt32(reader["NumeroDeAula"]);
+                AulaSeleccionada.NombreDeAula = Convert.ToString(reader["NombreDeAula"]);
+                
+                AulaSeleccionada.Activo = Convert.ToBoolean(reader["Activo"]);                
+                AulaSeleccionada.FechaCreacion = Convert.ToDateTime(reader["FechaCreacion"]);
+                AulaSeleccionada.FechaModificacion = (DateTime?)(reader.IsDBNull("FechaModificacion") ? null : reader["FechaModificacion"]);
+                AulaSeleccionada.CreadoPor = Convert.ToString(reader["CreadoPor"]);
+                AulaSeleccionada.ModificadoPor = Convert.ToString(reader["ModificadoPor"]);
+            }
+
+            reader.Close();
+
+            return AulaSeleccionada;            
         }
 
         public List<Aula> SeleccionarTodos()
         {
-            throw new NotImplementedException();
+            var query = "SELECT * FROM FN_Aulas_SeleccionarTodos()";
+            var command = CreateCommand(query);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            List<Aula> ListaTodasLasAulas = new List<Aula>();
+
+            while (reader.Read())
+            {
+                Aula AulaSeleccionada = new();
+
+                AulaSeleccionada.NumeroDeAula = Convert.ToInt32(reader["NumeroDeAula"]);
+                AulaSeleccionada.NombreDeAula = Convert.ToString(reader["NombreDeAula"]);
+
+                AulaSeleccionada.Activo = Convert.ToBoolean(reader["Activo"]);
+                AulaSeleccionada.FechaCreacion = Convert.ToDateTime(reader["FechaCreacion"]);
+                AulaSeleccionada.FechaModificacion = (DateTime?)(reader.IsDBNull("FechaModificacion") ? null : reader["FechaModificacion"]);
+                AulaSeleccionada.CreadoPor = Convert.ToString(reader["CreadoPor"]);
+                AulaSeleccionada.ModificadoPor = Convert.ToString(reader["ModificadoPor"]);
+
+                ListaTodasLasAulas.Add(AulaSeleccionada);
+            }
+
+            reader.Close();
+
+            return ListaTodasLasAulas;
         }
     }
 }
